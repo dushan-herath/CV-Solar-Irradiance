@@ -91,7 +91,7 @@ class IrradianceForecastDataset(Dataset):
         return len(self.df) - self.max_lookback - self.horizon
 
     def __getitem__(self, idx):
-        img_window = self.df.iloc[idx : idx + self.img_seq_len]
+        img_window = self.df.iloc[idx + self.ts_seq_len - self.img_seq_len : idx + self.ts_seq_len]
         ts_window = self.df.iloc[idx : idx + self.ts_seq_len]
         target_window = self.df.iloc[idx + self.ts_seq_len : idx + self.ts_seq_len + self.horizon]
 
@@ -171,7 +171,7 @@ class IrradianceForecastDataset(Dataset):
         plt.xlabel("Time")
         plt.ylabel("Irradiance (W/m²)")
         plt.title("GHI/DNI/DHI Forecast Visualization")
-        plt.xticks(rotation=30)
+        plt.xticks(rotation=90)
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
