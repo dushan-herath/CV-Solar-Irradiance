@@ -58,7 +58,7 @@ class PositionalEncoding(nn.Module):
 
 
 class GatedFusion(nn.Module):
-    def __init__(self, img_dim, ts_dim, fused_dim):
+    def __init__(self, img_dim, ts_dim, fused_dim, dropout: float = 0.1):
         super().__init__()
         self.img_proj = nn.Linear(img_dim, fused_dim)
         self.ts_proj = nn.Linear(ts_dim, fused_dim)
@@ -66,6 +66,7 @@ class GatedFusion(nn.Module):
             nn.Linear(img_dim + ts_dim, fused_dim),
             nn.Sigmoid()
         )
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, img_feats, ts_feats):
         """
@@ -78,7 +79,8 @@ class GatedFusion(nn.Module):
         gate = self.gate(torch.cat([img_feats, ts_last], dim=-1))
         img_proj = self.img_proj(img_feats)
         ts_proj = self.ts_proj(ts_last)
-        return gate * img_proj + (1 - gate) * ts_proj
+        fused = gate * img_proj + (1 - gate) * ts_proj
+        return self.dropout(fused)
 
 
 class FusionTransformer(nn.Module):
@@ -110,7 +112,7 @@ class MultimodalForecaster(nn.Module):
         ts_feat_dim: int,
         img_embed_dim: Optional[int] = None,
         ts_embed_dim: int = 64,
-        fused_dim: int = 256,
+        fused_dim: int = 512,
         d_model: int = 256,
         num_layers: int = 3,
         nhead: int = 4,
@@ -175,8 +177,9 @@ class MultimodalForecaster(nn.Module):
         out_seq = self.temporal(fused_feats)
 
         # Predict
-        last = out_seq[:, -1, :]
-        out = self.head(last)
+        #last = out_seq[:, -1, :]
+        #out = self.head(last)
+        out = self.head(out_seq)
         out = out.view(B, self.horizon, self.target_dim)
         return out
 
@@ -184,7 +187,7 @@ class MultimodalForecaster(nn.Module):
 
 if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    vit = ImageEncoder(model_name='vit_small_patch16_224', pretrained=False, freeze=True)
+    vit = ImageEncoder(model_name='vit_small_patch16_224', pretrained=True, freeze=True)
     model = MultimodalForecaster(
         img_encoder=vit,
         ts_feat_dim=5,

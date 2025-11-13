@@ -87,7 +87,7 @@ if __name__ == "__main__":
     mp.freeze_support()  
 
     # --- Config ---
-    CSV_PATH = "processed_dataset_polar_full.csv"
+    CSV_PATH = "processed_dataset_cropped_full.csv"
     BATCH_SIZE = 64
     NUM_EPOCHS = 25
     LR = 1e-4
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     # --- Training setup ---
     criterion = nn.MSELoss()
-    optimizer = optim.Adam(model.parameters(), lr=LR)
+    optimizer = optim.Adam(model.parameters(), lr=LR, weight_decay=1e-4)
 
     # --- Resume from checkpoint if exists ---
     start_epoch = 0
