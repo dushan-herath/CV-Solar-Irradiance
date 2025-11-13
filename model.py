@@ -71,7 +71,7 @@ class CrossAttentionFusion(nn.Module):
             mask[i, :img_ts_index + 1] = False  # unmask allowed steps
 
         # Apply cross-attention
-        fused, _ = self.attn(Q, K, V, attn_mask=mask)
+        fused, _ = self.attn(Q, K, V)
 
         # Linear projection
         fused = self.out_proj(fused)  # (B, T_img, fused_dim)
@@ -146,7 +146,6 @@ class MultimodalForecaster(nn.Module):
 
         # Cross-attention fusion
         fused_feats = self.cross_attn(img_feats, ts_feats)  # (B, T_img, fused_dim)
-        fused_feats = img_feats
 
         # Temporal transformer over fused tokens
         out_seq = self.temporal(fused_feats)
