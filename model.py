@@ -177,9 +177,8 @@ class MultimodalForecaster(nn.Module):
         out_seq = self.temporal(fused_feats)
 
         # Predict
-        #last = out_seq[:, -1, :]
-        #out = self.head(last)
-        out = self.head(out_seq)
+        last = out_seq[:, -1, :]
+        out = self.head(last)
         out = out.view(B, self.horizon, self.target_dim)
         return out
 
