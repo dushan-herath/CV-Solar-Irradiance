@@ -59,7 +59,7 @@ if __name__ == "__main__":
     TS_SEQ_LEN = 30
     MAX_HORIZON = 25
     TARGET_DIM = 3
-    BATCH_SIZE = 8
+    BATCH_SIZE = 64
 
     print(f"Exporting predictions & metrics on {DEVICE} using best_model.pth")
 

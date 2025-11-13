@@ -87,7 +87,7 @@ if __name__ == "__main__":
     mp.freeze_support()  
 
     # --- Config ---
-    CSV_PATH = "processed_dataset_polar_full.csv"
+    CSV_PATH = "processed_dataset_cropped_full.csv"
     BATCH_SIZE = 64
     NUM_EPOCHS = 25
     LR = 1e-4
@@ -128,7 +128,7 @@ if __name__ == "__main__":
 
 
     train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True, num_workers=2, pin_memory=True)
-    val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, shuffle=False, num_workers=2, pin_memory=True)
+    val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, shuffle=False, num_workers=1, pin_memory=True)
 
     # --- Model setup ---
     img_encoder = ImageEncoder(model_name="vit_small_patch16_224", pretrained=True, freeze=True)
