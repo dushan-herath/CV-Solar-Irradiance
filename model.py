@@ -146,6 +146,7 @@ class MultimodalForecaster(nn.Module):
 
         # Cross-attention fusion
         fused_feats = self.cross_attn(img_feats, ts_feats)  # (B, T_img, fused_dim)
+        fused_feats = img_feats
 
         # Temporal transformer over fused tokens
         out_seq = self.temporal(fused_feats)
