@@ -131,7 +131,7 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, shuffle=False, num_workers=1, pin_memory=True)
 
     # --- Model setup ---
-    img_encoder = ImageEncoder(model_name="vit_small_patch16_224", pretrained=True, freeze=False)
+    img_encoder = ImageEncoder(model_name="vit_small_patch16_224", pretrained=False, freeze=False)
     model = MultimodalForecaster(
         img_encoder=img_encoder,
         ts_feat_dim=len(train_ds.feature_cols),
