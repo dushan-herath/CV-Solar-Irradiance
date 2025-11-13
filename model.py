@@ -146,11 +146,17 @@ class MultimodalForecaster(nn.Module):
 
         # Regression head
         self.head = nn.Sequential(
+            nn.Linear(d_model, d_model),
+            nn.GELU(),
+            nn.LayerNorm(d_model),
+            nn.Dropout(dropout),
             nn.Linear(d_model, d_model // 2),
-            nn.ReLU(),
+            nn.GELU(),
+            nn.LayerNorm(d_model // 2),
             nn.Dropout(dropout),
             nn.Linear(d_model // 2, horizon * target_dim)
         )
+
 
     def forward(self, imgs: torch.Tensor, ts: torch.Tensor) -> torch.Tensor:
         """
@@ -176,9 +182,12 @@ class MultimodalForecaster(nn.Module):
         # Temporal transformer
         out_seq = self.temporal(fused_feats)
 
+        # mean pooling
+        context = out_seq.mean(dim=1)  # (B, d_model)
+        
         # Predict
-        last = out_seq[:, -1, :]
-        out = self.head(last)
+        #last = out_seq[:, -1, :]
+        out = self.head(context)
         out = out.view(B, self.horizon, self.target_dim)
         return out
 
