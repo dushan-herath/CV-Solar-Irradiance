@@ -54,12 +54,12 @@ if __name__ == "__main__":
     mp.freeze_support()
 
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    CSV_PATH = "processed_dataset_polar_full.csv"
+    CSV_PATH = "processed_dataset_cropped_full.csv"
     IMG_SEQ_LEN = 5
     TS_SEQ_LEN = 30
     MAX_HORIZON = 25
     TARGET_DIM = 3
-    BATCH_SIZE = 64
+    BATCH_SIZE = 8
 
     print(f"Exporting predictions & metrics on {DEVICE} using best_model.pth")
 
@@ -88,14 +88,14 @@ if __name__ == "__main__":
     print(f"Dataset initialized (VAL): {len(val_ds)} samples, horizon={MAX_HORIZON}")
 
     # --- Model setup ---
-    img_encoder = ImageEncoder(model_name="vit_small_patch16_224", pretrained=False, freeze=True)
+    img_encoder = ImageEncoder(model_name="swin_tiny_patch4_window7_224", pretrained=False, freeze=True)
     model = MultimodalForecaster(
         img_encoder=img_encoder,
         ts_feat_dim=len(full_mean),
         horizon=MAX_HORIZON,
         target_dim=TARGET_DIM,
         d_model=256,
-        num_layers=3
+        num_layers=2
     ).to(DEVICE)
 
     if not os.path.exists("best_model.pth"):

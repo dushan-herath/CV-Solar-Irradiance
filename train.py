@@ -138,7 +138,7 @@ if __name__ == "__main__":
         horizon=HORIZON,
         target_dim=TARGET_DIM,
         d_model=256,
-        num_layers=3,
+        num_layers=2,
     ).to(DEVICE)
 
     print(f"Model ready on {DEVICE} | Parameters: {sum(p.numel() for p in model.parameters())/1e6:.2f}M")
