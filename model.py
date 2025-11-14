@@ -111,7 +111,7 @@ class MultimodalForecaster(nn.Module):
         img_encoder: ImageEncoder,
         ts_feat_dim: int,
         img_embed_dim: Optional[int] = None,
-        ts_embed_dim: int = 64,
+        ts_embed_dim: int = 128,
         fused_dim: int = 256,
         d_model: int = 256,
         num_layers: int = 2,

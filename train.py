@@ -95,7 +95,7 @@ if __name__ == "__main__":
     IMG_SEQ_LEN = 5
     TS_SEQ_LEN = 30
     HORIZON = 25
-    TARGET_DIM = 3
+    TARGET_DIM = 1
 
     print(f"Training on {DEVICE}")
 
@@ -167,7 +167,7 @@ if __name__ == "__main__":
         train_losses.append(train_loss)
         val_losses.append(val_loss)
 
-        print(f"Train Loss: {train_loss:.5f} | 🔵 Val Loss: {val_loss:.5f}")
+        print(f"Train Loss: {train_loss:.5f} | Val Loss: {val_loss:.5f}")
 
         # Save best model
         if val_loss < best_val_loss:

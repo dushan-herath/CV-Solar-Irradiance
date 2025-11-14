@@ -58,8 +58,8 @@ if __name__ == "__main__":
     IMG_SEQ_LEN = 5
     TS_SEQ_LEN = 30
     MAX_HORIZON = 25
-    TARGET_DIM = 3
-    BATCH_SIZE = 8
+    TARGET_DIM = 1
+    BATCH_SIZE = 64
 
     print(f"Exporting predictions & metrics on {DEVICE} using best_model.pth")
 
@@ -71,7 +71,8 @@ if __name__ == "__main__":
     full_std = pd.Series(full_norm_stats["std"])
     normalization_stats = {"mean": full_mean, "std": full_std}
 
-    TARGET_NAMES = ["ghi", "dni", "dhi"]
+    #TARGET_NAMES = ["ghi", "dni", "dhi"]
+    TARGET_NAMES = ["ghi"]
     mean_targets = np.array([full_mean[n] for n in TARGET_NAMES]).reshape(1, 1, TARGET_DIM)
     std_targets = np.array([full_std[n] for n in TARGET_NAMES]).reshape(1, 1, TARGET_DIM)
 
