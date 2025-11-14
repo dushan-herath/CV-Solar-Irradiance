@@ -157,6 +157,12 @@ class MultimodalForecaster(nn.Module):
             nn.Linear(d_model // 2, horizon * target_dim)
         )
 
+        self.attn_pool = nn.Sequential(
+            nn.Linear(d_model, d_model // 2),
+            nn.GELU(),
+            nn.Linear(d_model // 2, 1)
+        )
+
 
     def forward(self, imgs: torch.Tensor, ts: torch.Tensor) -> torch.Tensor:
         """
@@ -182,8 +188,10 @@ class MultimodalForecaster(nn.Module):
         # Temporal transformer
         out_seq = self.temporal(fused_feats)
 
-        # mean pooling
-        context = out_seq.mean(dim=1)  # (B, d_model)
+        # Attention pooling
+        scores = self.attn_pool(out_seq)         # (B, T_img, 1)
+        weights = torch.softmax(scores, dim=1)   # (B, T_img, 1)
+        context = (weights * out_seq).sum(dim=1) # (B, d_model)
         
         # Predict
         #last = out_seq[:, -1, :]
