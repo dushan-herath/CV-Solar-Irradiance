@@ -125,6 +125,7 @@ class MultimodalForecaster(nn.Module):
         self.img_encoder = img_encoder
         self.img_embed_dim = img_encoder.out_dim if img_embed_dim is None else img_embed_dim
         self.ts_encoder = TS_Encoder(ts_feat_dim=ts_feat_dim, ts_embed_dim=ts_embed_dim, dropout=dropout)
+        self.ts_embed_dim = ts_embed_dim
 
         # Positional encodings for both streams
         self.img_pos_enc = PositionalEncoding(self.img_embed_dim)
@@ -171,6 +172,7 @@ class MultimodalForecaster(nn.Module):
         Returns: (B, horizon, target_dim)
         """
         B, T_img, C, H, W = imgs.shape
+        B, T_ts, F = ts.shape
 
         # Encode images
         imgs_flat = imgs.view(B * T_img, C, H, W)
@@ -185,7 +187,7 @@ class MultimodalForecaster(nn.Module):
         ts_feats = self.ts_encoder(ts)
         ts_feats = self.ts_pos_enc(ts_feats)
 
-        ts_feats = torch.zeros(B, 1, self.ts_embed_dim, device=imgs.device)
+        ts_feats = torch.zeros(B, T_ts, self.ts_embed_dim, device=imgs.device)
 
         # Fuse
         fused_feats = self.fusion(img_feats, ts_feats)
