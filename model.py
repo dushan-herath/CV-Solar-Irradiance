@@ -181,13 +181,14 @@ class MultimodalForecaster(nn.Module):
         img_feats = self.img_pos_enc(img_feats)
 
         # temp disable image encoder
-        #img_feats = torch.zeros(B, T_img, self.img_embed_dim, device=ts.device)
+        img_feats = torch.zeros(B, T_img, self.img_embed_dim, device=ts.device)
 
         # Encode TS
         ts_feats = self.ts_encoder(ts)
         ts_feats = self.ts_pos_enc(ts_feats)
 
-        ts_feats = torch.zeros(B, T_ts, self.ts_embed_dim, device=imgs.device)
+        # temp disable TS encoder 
+        #ts_feats = torch.zeros(B, T_ts, self.ts_embed_dim, device=imgs.device)
 
         # Fuse
         fused_feats = self.fusion(img_feats, ts_feats)
