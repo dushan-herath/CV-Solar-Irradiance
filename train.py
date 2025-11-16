@@ -87,7 +87,7 @@ if __name__ == "__main__":
     mp.freeze_support()  
 
     # --- Config ---
-    CSV_PATH = "processed_dataset_polar_full.csv"
+    CSV_PATH = "processed_dataset_cropped_full.csv"
     BATCH_SIZE = 64
     NUM_EPOCHS = 25
     LR = 1e-4
