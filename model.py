@@ -82,9 +82,9 @@ class GatedFusion(nn.Module):
         # use both modalities
         #fused = gate * img_proj + (1 - gate) * ts_proj
         #only use ts_proj
-        #fused =  ts_proj
+        fused =  ts_proj
         #only use img_proj
-        fused =  img_proj
+        #fused =  img_proj
         return self.dropout(fused)
 
 
