@@ -79,7 +79,12 @@ class GatedFusion(nn.Module):
         gate = self.gate(torch.cat([img_feats, ts_last], dim=-1))
         img_proj = self.img_proj(img_feats)
         ts_proj = self.ts_proj(ts_last)
-        fused = gate * img_proj + (1 - gate) * ts_proj
+        # use both modalities
+        #fused = gate * img_proj + (1 - gate) * ts_proj
+        #only use ts_proj
+        #fused =  ts_proj
+        #only use img_proj
+        fused =  img_proj
         return self.dropout(fused)
 
 
@@ -181,7 +186,7 @@ class MultimodalForecaster(nn.Module):
         img_feats = self.img_pos_enc(img_feats)
 
         # temp disable image encoder
-        img_feats = torch.zeros(B, T_img, self.img_embed_dim, device=ts.device)
+        #img_feats = torch.zeros(B, T_img, self.img_embed_dim, device=ts.device)
 
         # Encode TS
         ts_feats = self.ts_encoder(ts)
